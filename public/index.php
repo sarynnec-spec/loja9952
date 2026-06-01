@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../src/helpers.php';
 
 $envPath = __DIR__ . '/../.env';
 if (is_file($envPath)) {
@@ -11,6 +12,7 @@ if (is_file($envPath)) {
     }
 }
 
+use App\Controller\CarrinhoController;
 use App\Controller\VeiculoController;
 
 $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
@@ -32,10 +34,14 @@ $acao = $partes[1] ?? '';
 $id = (int) ($partes[2] ?? 0);
 
 $ctrl = new VeiculoController($basePath);
-$routeKey = ($recurso === '' && $acao === '') ? '/' : "$recurso/$acao";
+$carrinhoCtrl = new CarrinhoController($basePath);
+$routeKey = ($recurso === '' && $acao === '') ? '/' : ($acao === '' ? $recurso . '/' : "$recurso/$acao");
 
 match ($routeKey) {
     '/' => $ctrl->catalogo(),
     'veiculo/detalhe' => $ctrl->detalhe($id),
+    'carrinho/' => $carrinhoCtrl->ver(),
+    'carrinho/adicionar' => $carrinhoCtrl->adicionar(),
+    'carrinho/remover' => $carrinhoCtrl->remover(),
     default => $ctrl->catalogo(),
 };

@@ -22,23 +22,33 @@ class Database
         $user = $_ENV['DB_USER'] ?? getenv('DB_USER') ?: 'root';
         $pass = $_ENV['DB_PASS'] ?? getenv('DB_PASS') ?: '';
 
-        $dsn = "mysql:host={$host};port={$port};dbname={$name};charset=utf8mb4";
+        $hosts = array_values(array_unique([$host, 'localhost']));
+        $lastException = null;
 
-        try {
-            self::$connection = new PDO(
-                $dsn,
-                $user,
-                $pass,
-                [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                    PDO::ATTR_EMULATE_PREPARES => false,
-                ]
-            );
-        } catch (PDOException $e) {
-            throw new PDOException('Falha na ligacao a base de dados: ' . $e->getMessage(), (int) $e->getCode(), $e);
+        foreach ($hosts as $currentHost) {
+            $dsn = "mysql:host={$currentHost};port={$port};dbname={$name};charset=utf8mb4";
+
+            try {
+                self::$connection = new PDO(
+                    $dsn,
+                    $user,
+                    $pass,
+                    [
+                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                        PDO::ATTR_EMULATE_PREPARES => false,
+                    ]
+                );
+                return self::$connection;
+            } catch (PDOException $e) {
+                $lastException = $e;
+            }
         }
 
-        return self::$connection;
+        $mensagem = 'Falha na ligacao a base de dados. Verifica se o MySQL/MariaDB esta a correr, e se as credenciais em .env estao corretas.';
+        if ($lastException instanceof PDOException) {
+            $mensagem .= ' Detalhe: ' . $lastException->getMessage();
+        }
+        throw new PDOException($mensagem, (int) ($lastException?->getCode() ?? 0), $lastException);
     }
 }

@@ -21,10 +21,13 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
         .card-body h3 { margin: 0 0 6px; font-size: 1rem; color: #1a237e; }
         .preco { font-size: 1.3rem; font-weight: bold; color: #1565c0; }
         .detalhe { display: inline-block; margin-top: 10px; background: #1565c0; color: #fff; padding: 7px 14px; border-radius: 4px; text-decoration: none; font-size: 0.9rem; }
+        .btn-carrinho { display: inline-block; margin-top: 10px; background: #1a237e; color: #fff; padding: 7px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+        .acoes-card { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
     </style>
 </head>
 <body>
-    <h1>AutoShop - Catalogo de Veiculos</h1>
+    <?php require __DIR__ . '/header.php'; ?>
+    <h1>AutoShop - Catálogo de Veículos</h1>
 
     <form class="filtros" method="GET" action="<?= htmlspecialchars($basePath . '/') ?>">
         <select name="marca_id">
@@ -36,22 +39,22 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
             <?php endforeach ?>
         </select>
         <select name="combustivel">
-            <option value="">Combustivel</option>
+            <option value="">Combustível</option>
             <?php foreach (['Gasolina', 'Diesel', 'Eletrico', 'Hibrido'] as $c): ?>
             <option <?= (($_GET['combustivel'] ?? '') === $c) ? 'selected' : '' ?>><?= $c ?></option>
             <?php endforeach ?>
         </select>
-        <input type="number" name="preco_max" placeholder="Preco maximo (EUR)" value="<?= htmlspecialchars($_GET['preco_max'] ?? '') ?>">
-        <input type="number" name="ano_min" placeholder="Ano minimo" value="<?= htmlspecialchars($_GET['ano_min'] ?? '') ?>">
+        <input type="number" name="preco_max" placeholder="Preço máximo (EUR)" value="<?= htmlspecialchars($_GET['preco_max'] ?? '') ?>">
+        <input type="number" name="ano_min" placeholder="Ano mínimo" value="<?= htmlspecialchars($_GET['ano_min'] ?? '') ?>">
         <input type="text" name="pesquisa" placeholder="Pesquisar modelo..." value="<?= htmlspecialchars($_GET['pesquisa'] ?? '') ?>">
         <button type="submit">Filtrar</button>
         <a href="<?= htmlspecialchars($basePath . '/') ?>" style="padding:8px 14px;color:#555;text-decoration:none;">Limpar</a>
     </form>
 
-    <p><?= count($veiculos) ?> veiculo(s) encontrado(s)</p>
+    <p><?= count($veiculos) ?> veículo(s) encontrado(s)</p>
 
     <?php if (empty($veiculos)): ?>
-        <p style="color:#888;">Nenhum veiculo corresponde aos filtros selecionados.</p>
+        <p style="color:#888;">Nenhum veículo corresponde aos filtros selecionados.</p>
     <?php else: ?>
     <div class="grelha">
     <?php foreach ($veiculos as $v): ?>
@@ -70,7 +73,14 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
                     <?= htmlspecialchars((string) $v['combustivel']) ?>
                 </p>
                 <div class="preco"><?= number_format((float) $v['preco'], 2, ',', '.') ?> EUR</div>
-                <a class="detalhe" href="<?= htmlspecialchars($basePath . '/veiculo/detalhe/' . (int) $v['id']) ?>">Ver detalhe</a>
+                <div class="acoes-card">
+                    <a class="detalhe" href="<?= htmlspecialchars($basePath . '/veiculo/detalhe/' . (int) $v['id']) ?>">Ver detalhe</a>
+                    <form method="POST" action="<?= htmlspecialchars($basePath . '/carrinho/adicionar') ?>" style="margin:0;">
+                        <input type="hidden" name="veiculo_id" value="<?= (int) $v['id'] ?>">
+                        <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
+                        <button type="submit" class="btn-carrinho">Adicionar ao carrinho</button>
+                    </form>
+                </div>
             </div>
         </div>
     <?php endforeach ?>
