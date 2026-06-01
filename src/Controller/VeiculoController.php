@@ -50,7 +50,7 @@ class VeiculoController
             echo 'Veiculo nao encontrado.';
             return;
         }
-
+        
         $basePath = $this->basePath;
         $projectPath = preg_replace('#/public$#', '', $basePath) ?: '';
         $titulo = $veiculo['marca'] . ' ' . $veiculo['modelo'];
