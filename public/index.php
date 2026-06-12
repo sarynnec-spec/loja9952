@@ -13,6 +13,9 @@ if (is_file($envPath)) {
 }
 
 use App\Controller\CarrinhoController;
+use App\Controller\AuthController;
+use App\Controller\ContaController;
+use App\Controller\CheckoutController;
 use App\Controller\VeiculoController;
 
 $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
@@ -35,7 +38,15 @@ $id = (int) ($partes[2] ?? 0);
 
 $ctrl = new VeiculoController($basePath);
 $carrinhoCtrl = new CarrinhoController($basePath);
+$authCtrl = new AuthController($basePath);
+$contaCtrl = new ContaController();
+$checkoutCtrl = new CheckoutController($basePath);
 $routeKey = ($recurso === '' && $acao === '') ? '/' : ($acao === '' ? $recurso . '/' : "$recurso/$acao");
+
+if ($recurso === 'checkout' && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && $acao === 'confirmar') {
+    $checkoutCtrl->confirmar();
+    exit;
+}
 
 match ($routeKey) {
     '/' => $ctrl->catalogo(),
@@ -43,5 +54,10 @@ match ($routeKey) {
     'carrinho/' => $carrinhoCtrl->ver(),
     'carrinho/adicionar' => $carrinhoCtrl->adicionar(),
     'carrinho/remover' => $carrinhoCtrl->remover(),
+    'checkout/' => $checkoutCtrl->ver(),
+    'login/' => $authCtrl->login(),
+    'registar/' => $authCtrl->registar(),
+    'logout/' => $authCtrl->logout(),
+    'conta/' => $contaCtrl->ver(),
     default => $ctrl->catalogo(),
 };

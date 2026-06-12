@@ -138,8 +138,9 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
             <?php endforeach; ?>
         </div>
 
-        <a class="btn btn-checkout" href="<?= htmlspecialchars($basePath . '/checkout') ?>">Prosseguir para reserva</a>
-        <a class="btn btn-voltar" href="<?= htmlspecialchars($basePath . '/') ?>">Continuar a ver veÃ­culos</a>
+        <a class="btn btn-checkout" href="<?= htmlspecialchars($basePath . '/checkout') ?>">Prosseguir para checkout</a>
+        <a class="btn btn-voltar" href="<?= htmlspecialchars($basePath . '/') ?>">Continuar a ver veículos</a>
     <?php endif; ?>
 </body>
 </html>
+
