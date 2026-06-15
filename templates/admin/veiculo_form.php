@@ -45,6 +45,7 @@ $imagemAtual = $veiculo['imagem'] ?? '';
             background:
                 radial-gradient(circle at top left, rgba(229, 57, 53, 0.18), transparent 26%),
                 linear-gradient(180deg, #121214 0%, #09090b 100%);
+            overflow-x: hidden;
         }
         a { color: inherit; text-decoration: none; }
         .wrap {
@@ -61,6 +62,19 @@ $imagemAtual = $veiculo['imagem'] ?? '';
                 linear-gradient(135deg, rgba(229, 57, 53, 0.2), rgba(255, 255, 255, 0.05)),
                 rgba(255, 255, 255, 0.04);
             box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: auto -60px -60px auto;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(229, 57, 53, 0.24), transparent 70%);
+            pointer-events: none;
+            animation: pulseGlow 6s ease-in-out infinite;
         }
         h1 { margin: 0 0 8px; font-size: clamp(2rem, 4vw, 3rem); }
         .hero p { margin: 0; color: var(--muted); }
@@ -71,6 +85,17 @@ $imagemAtual = $veiculo['imagem'] ?? '';
             border: 1px solid var(--border);
             background: var(--surface);
             box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .panel::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%);
+            transform: translateX(-120%);
+            animation: sweep 7s ease-in-out infinite;
+            pointer-events: none;
         }
         .errors {
             margin: 0 0 18px;
@@ -151,6 +176,11 @@ $imagemAtual = $veiculo['imagem'] ?? '';
             border-radius: 18px;
             border: 1px solid var(--border);
             background: rgba(255, 255, 255, 0.05);
+            transition: transform 220ms ease, box-shadow 220ms ease;
+        }
+        .image-preview img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 18px 40px rgba(229, 57, 53, 0.18);
         }
         .helper {
             color: var(--muted);
@@ -168,6 +198,17 @@ $imagemAtual = $veiculo['imagem'] ?? '';
         @keyframes reveal {
             from { opacity: 0; transform: translateY(14px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.6; }
+            50% { transform: scale(1.08); opacity: 1; }
+        }
+        @keyframes sweep {
+            0%, 58% { transform: translateX(-120%); }
+            100% { transform: translateX(120%); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
         }
         @media (max-width: 780px) {
             .grid { grid-template-columns: 1fr; }

@@ -52,6 +52,11 @@ $imagem = function_exists('veiculo_imagem_profissional') ? veiculo_imagem_profis
             object-fit: cover;
             display: block;
             filter: contrast(1.1) saturate(1.1);
+            transition: transform 360ms ease, filter 360ms ease;
+        }
+        .visual:hover img {
+            transform: scale(1.04);
+            filter: contrast(1.15) saturate(1.18);
         }
         .panel { padding: 24px; position: relative; }
         .panel::before {
@@ -122,10 +127,19 @@ $imagem = function_exists('veiculo_imagem_profissional') ? veiculo_imagem_profis
             cursor: pointer;
             text-decoration: none;
             font-weight: 700;
+            box-shadow: 0 16px 32px rgba(229, 57, 53, 0.22);
+            transition: transform 220ms ease, box-shadow 220ms ease;
+        }
+        .cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 44px rgba(229, 57, 53, 0.28);
         }
         @media (max-width: 900px) {
             .page-grid { grid-template-columns: 1fr; }
             .visual img { min-height: 280px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
         }
     </style>
 </head>

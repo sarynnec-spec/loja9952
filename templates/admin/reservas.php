@@ -27,6 +27,7 @@ $reservas = $reservas ?? [];
             background:
                 radial-gradient(circle at top left, rgba(229, 57, 53, 0.18), transparent 28%),
                 linear-gradient(180deg, #121214 0%, #09090b 100%);
+            overflow-x: hidden;
         }
         a { color: inherit; text-decoration: none; }
         .wrap {
@@ -43,6 +44,19 @@ $reservas = $reservas ?? [];
                 linear-gradient(135deg, rgba(229, 57, 53, 0.2), rgba(255, 255, 255, 0.05)),
                 rgba(255, 255, 255, 0.04);
             box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: auto -50px -60px auto;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 122, 89, 0.26), transparent 70%);
+            animation: pulseGlow 6s ease-in-out infinite;
+            pointer-events: none;
         }
         h1 { margin: 0 0 8px; font-size: clamp(2rem, 4vw, 3rem); }
         .hero p { margin: 0; color: var(--muted); }
@@ -88,6 +102,7 @@ $reservas = $reservas ?? [];
             border: 1px solid var(--border);
             background: var(--surface);
             box-shadow: var(--shadow);
+            position: relative;
         }
         table {
             width: 100%;
@@ -108,6 +123,9 @@ $reservas = $reservas ?? [];
             vertical-align: top;
         }
         tbody tr:hover { background: rgba(255, 255, 255, 0.03); }
+        tbody tr {
+            animation: rowRise 520ms ease both;
+        }
         .state-form {
             display: flex;
             gap: 8px;
@@ -128,7 +146,9 @@ $reservas = $reservas ?? [];
             background: rgba(255, 255, 255, 0.08);
             color: var(--muted);
             font-size: 0.88rem;
+            transition: transform 180ms ease, background 180ms ease;
         }
+        .pill:hover { transform: translateY(-1px); background: rgba(255, 255, 255, 0.12); }
         .status-pendente { color: #ffd27d; }
         .status-confirmada { color: #8ef0b4; }
         .status-cancelada { color: #ff9d9d; }
@@ -139,6 +159,17 @@ $reservas = $reservas ?? [];
         @keyframes reveal {
             from { opacity: 0; transform: translateY(14px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes rowRise {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.65; }
+            50% { transform: scale(1.08); opacity: 1; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
         }
     </style>
 </head>

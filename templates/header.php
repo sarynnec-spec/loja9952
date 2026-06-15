@@ -24,6 +24,7 @@ $total_carrinho = count($_SESSION['carrinho'] ?? []);
             radial-gradient(circle at 85% 12%, rgba(255, 255, 255, 0.08), transparent 20%),
             linear-gradient(180deg, #121214 0%, #09090b 100%);
         min-height: 100%;
+        scroll-behavior: smooth;
     }
     body {
         background: transparent;
@@ -31,6 +32,20 @@ $total_carrinho = count($_SESSION['carrinho'] ?? []);
         font-family: "Trebuchet MS", "Segoe UI", sans-serif;
         margin: 0;
         min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+    }
+    body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+            radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.04), transparent 20%),
+            radial-gradient(circle at 82% 14%, rgba(229, 57, 53, 0.08), transparent 18%),
+            radial-gradient(circle at 50% 100%, rgba(255, 255, 255, 0.03), transparent 18%);
+        opacity: 0.85;
+        animation: driftGlow 14s ease-in-out infinite alternate;
     }
     a { color: inherit; }
     .site-header {
@@ -41,6 +56,7 @@ $total_carrinho = count($_SESSION['carrinho'] ?? []);
         background: rgba(8, 8, 10, 0.8);
         border-bottom: 1px solid var(--border);
         box-shadow: var(--shadow);
+        animation: headerDrop 420ms ease both;
     }
     .site-header__inner {
         max-width: 1180px;
@@ -66,6 +82,16 @@ $total_carrinho = count($_SESSION['carrinho'] ?? []);
         border-radius: 12px;
         background: linear-gradient(135deg, var(--accent), #6f0000);
         box-shadow: 0 10px 30px rgba(229, 57, 53, 0.35);
+        position: relative;
+        overflow: hidden;
+    }
+    .brand-mark::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(120deg, transparent 10%, rgba(255,255,255,0.32) 50%, transparent 90%);
+        transform: translateX(-140%);
+        animation: sheen 4.8s ease-in-out infinite;
     }
     .brand span { font-size: 1rem; }
     .nav {
@@ -91,6 +117,7 @@ $total_carrinho = count($_SESSION['carrinho'] ?? []);
     }
     .nav .nav-accent {
         background: linear-gradient(135deg, var(--accent), #7a0c0c);
+        box-shadow: 0 12px 28px rgba(229, 57, 53, 0.22);
     }
     .site-shell {
         max-width: 1180px;
@@ -103,6 +130,25 @@ $total_carrinho = count($_SESSION['carrinho'] ?? []);
     @keyframes pageReveal {
         from { opacity: 0; transform: translateY(14px); }
         to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes headerDrop {
+        from { opacity: 0; transform: translateY(-12px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes driftGlow {
+        from { transform: translate3d(0, 0, 0) scale(1); }
+        to { transform: translate3d(0, -8px, 0) scale(1.02); }
+    }
+    @keyframes sheen {
+        0%, 55% { transform: translateX(-140%); }
+        80%, 100% { transform: translateX(140%); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+            animation: none !important;
+            transition: none !important;
+            scroll-behavior: auto !important;
+        }
     }
     @media (max-width: 760px) {
         .site-header__inner { flex-direction: column; align-items: flex-start; }

@@ -29,6 +29,7 @@ $veiculos = $veiculos ?? [];
             background:
                 radial-gradient(circle at top left, rgba(229, 57, 53, 0.18), transparent 28%),
                 linear-gradient(180deg, #121214 0%, #09090b 100%);
+            overflow-x: hidden;
         }
         a { color: inherit; text-decoration: none; }
         .wrap {
@@ -45,6 +46,19 @@ $veiculos = $veiculos ?? [];
                 linear-gradient(135deg, rgba(229, 57, 53, 0.2), rgba(255, 255, 255, 0.05)),
                 rgba(255, 255, 255, 0.04);
             box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: auto -60px -60px auto;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(229, 57, 53, 0.28), transparent 68%);
+            pointer-events: none;
+            animation: pulseGlow 6s ease-in-out infinite;
         }
         h1 { margin: 0 0 8px; font-size: clamp(2rem, 4vw, 3rem); }
         .hero p { margin: 0; color: var(--muted); }
@@ -82,6 +96,7 @@ $veiculos = $veiculos ?? [];
             border: 1px solid var(--border);
             background: var(--surface);
             box-shadow: var(--shadow);
+            position: relative;
         }
         table {
             width: 100%;
@@ -102,6 +117,9 @@ $veiculos = $veiculos ?? [];
             vertical-align: middle;
         }
         tbody tr:hover { background: rgba(255, 255, 255, 0.03); }
+        tbody tr {
+            animation: rowRise 520ms ease both;
+        }
         .thumb {
             width: 80px;
             height: 54px;
@@ -109,6 +127,12 @@ $veiculos = $veiculos ?? [];
             object-fit: cover;
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: transform 220ms ease, box-shadow 220ms ease, filter 220ms ease;
+        }
+        .thumb:hover {
+            transform: scale(1.06);
+            box-shadow: 0 10px 22px rgba(229, 57, 53, 0.18);
+            filter: saturate(1.08);
         }
         .badge {
             display: inline-flex;
@@ -141,6 +165,17 @@ $veiculos = $veiculos ?? [];
         @keyframes reveal {
             from { opacity: 0; transform: translateY(14px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes rowRise {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.08); opacity: 1; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
         }
         @media (max-width: 760px) {
             .toolbar { align-items: flex-start; }

@@ -113,6 +113,11 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
             object-fit: cover;
             background: #111;
             filter: contrast(1.08) saturate(1.08);
+            transition: transform 320ms ease, filter 320ms ease;
+        }
+        .card:hover img {
+            transform: scale(1.05);
+            filter: contrast(1.12) saturate(1.18);
         }
         .card-body { padding: 16px; }
         .card-body h3 { margin: 0 0 6px; font-size: 1.1rem; }
@@ -148,6 +153,9 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
         @keyframes floatUp {
             from { opacity: 0; transform: translateY(14px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
         }
     </style>
 </head>
