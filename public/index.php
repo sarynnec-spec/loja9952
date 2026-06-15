@@ -51,17 +51,37 @@ if ($recurso === 'checkout' && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' 
 }
 
 if ($recurso === 'admin') {
-    match ($routeKey) {
-        'admin/' => $adminCtrl->dashboard(),
-        'admin/dashboard' => $adminCtrl->dashboard(),
-        'admin/veiculos' => $adminCtrl->veiculosLista(),
-        'admin/veiculos/criar' => $adminCtrl->veiculoCriar(),
-        'admin/veiculos/editar' => $adminCtrl->veiculoEditar($id),
-        'admin/veiculos/apagar' => $adminCtrl->veiculoApagar($id),
-        'admin/reservas' => $adminCtrl->reservasLista(),
-        'admin/reservas/estado' => $adminCtrl->reservaEstado(),
-        default => $adminCtrl->dashboard(),
-    };
+    if ($acao === '') {
+        $adminCtrl->dashboard();
+        exit;
+    }
+
+    if ($acao === 'dashboard') {
+        $adminCtrl->dashboard();
+        exit;
+    }
+
+    if ($acao === 'veiculos') {
+        match ($partes[2] ?? '') {
+            '' => $adminCtrl->veiculosLista(),
+            'criar' => $adminCtrl->veiculoCriar(),
+            'editar' => $adminCtrl->veiculoEditar($id),
+            'apagar' => $adminCtrl->veiculoApagar($id),
+            default => $adminCtrl->veiculosLista(),
+        };
+        exit;
+    }
+
+    if ($acao === 'reservas') {
+        match ($partes[2] ?? '') {
+            '' => $adminCtrl->reservasLista(),
+            'estado' => $adminCtrl->reservaEstado(),
+            default => $adminCtrl->reservasLista(),
+        };
+        exit;
+    }
+
+    $adminCtrl->dashboard();
     exit;
 }
 
