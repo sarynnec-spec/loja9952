@@ -16,6 +16,7 @@ use App\Controller\CarrinhoController;
 use App\Controller\AuthController;
 use App\Controller\ContaController;
 use App\Controller\CheckoutController;
+use App\Controller\AdminController;
 use App\Controller\VeiculoController;
 
 $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
@@ -41,10 +42,26 @@ $carrinhoCtrl = new CarrinhoController($basePath);
 $authCtrl = new AuthController($basePath);
 $contaCtrl = new ContaController();
 $checkoutCtrl = new CheckoutController($basePath);
+$adminCtrl = new AdminController();
 $routeKey = ($recurso === '' && $acao === '') ? '/' : ($acao === '' ? $recurso . '/' : "$recurso/$acao");
 
 if ($recurso === 'checkout' && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && $acao === 'confirmar') {
     $checkoutCtrl->confirmar();
+    exit;
+}
+
+if ($recurso === 'admin') {
+    match ($routeKey) {
+        'admin/' => $adminCtrl->dashboard(),
+        'admin/dashboard' => $adminCtrl->dashboard(),
+        'admin/veiculos' => $adminCtrl->veiculosLista(),
+        'admin/veiculos/criar' => $adminCtrl->veiculoCriar(),
+        'admin/veiculos/editar' => $adminCtrl->veiculoEditar($id),
+        'admin/veiculos/apagar' => $adminCtrl->veiculoApagar($id),
+        'admin/reservas' => $adminCtrl->reservasLista(),
+        'admin/reservas/estado' => $adminCtrl->reservaEstado(),
+        default => $adminCtrl->dashboard(),
+    };
     exit;
 }
 
@@ -60,4 +77,11 @@ match ($routeKey) {
     'logout/' => $authCtrl->logout(),
     'conta/' => $contaCtrl->ver(),
     default => $ctrl->catalogo(),
+        'admin/'              => (new AdminController())->dashboard(),
+    'admin/login'         => (new AuthController())->adminLogin(),
+    'admin/veiculos'      => (new AdminController())->veiculosLista(),
+    'admin/veiculos/criar'=> (new AdminController())->veiculoCriar(),
+    'admin/reservas'      => (new AdminController())->reservasLista(),
+    'admin/reservas/estado'=> (new AdminController())->reservaEstado(),
+
 };

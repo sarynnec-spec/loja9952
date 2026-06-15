@@ -54,7 +54,41 @@ class VeiculoModel {
         $stmt->execute([':id' => $id]);
         return $stmt->fetch();
     }
- 
+
+    public function criar(array $dados): int {
+        $stmt = $this->db->prepare(
+            'INSERT INTO veiculos
+             (marca_id, modelo, ano, quilometros, combustivel, cilindrada, preco, descricao, imagem)
+             VALUES (:marca_id, :modelo, :ano, :quilometros, :combustivel, :cilindrada, :preco, :descricao, :imagem)'
+        );
+        $stmt->execute($dados);
+        return (int) $this->db->lastInsertId();
+    }
+
+    public function atualizar(int $id, array $dados): void {
+        $dados[':id'] = $id;
+        $sql = 'UPDATE veiculos SET
+                    marca_id = :marca_id,
+                    modelo = :modelo,
+                    ano = :ano,
+                    quilometros = :quilometros,
+                    combustivel = :combustivel,
+                    cilindrada = :cilindrada,
+                    preco = :preco,
+                    descricao = :descricao';
+        if (array_key_exists(':imagem', $dados)) {
+            $sql .= ', imagem = :imagem';
+        }
+        $sql .= ' WHERE id = :id';
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($dados);
+    }
+
+    public function apagar(int $id): void {
+        $stmt = $this->db->prepare('DELETE FROM veiculos WHERE id = :id');
+        $stmt->execute([':id' => $id]);
+    }
+
     public function getMarcas(): array {
         return $this->db->query('SELECT * FROM marcas ORDER BY nome')->fetchAll();
     }
