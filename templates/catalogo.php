@@ -183,6 +183,8 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
         }
         .hero h1 { margin: 0 0 8px; font-size: clamp(2rem, 4vw, 3.4rem); }
         .hero p { margin: 0; color: var(--muted); max-width: 70ch; }
+        .filtros-toggle-input { display: none; }
+        .filtros-toggle-label { display: none; }
         .filtros {
             display: flex;
             gap: 12px;
@@ -193,6 +195,36 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
             border: 1px solid var(--border);
             background: rgba(255, 255, 255, 0.05);
             box-shadow: var(--shadow);
+        }
+        @media (max-width: 760px) {
+            .filtros-toggle-label {
+                display: block;
+                margin: 18px 0 0;
+                padding: 14px 18px;
+                border-radius: 18px;
+                border: 1px solid var(--border);
+                background: rgba(255, 255, 255, 0.06);
+                color: var(--text);
+                font-weight: 700;
+                cursor: pointer;
+                text-align: center;
+            }
+            .filtros {
+                max-height: 0;
+                opacity: 0;
+                overflow: hidden;
+                margin: 0;
+                padding: 0 18px;
+                border-width: 0;
+                transition: max-height 280ms ease, opacity 220ms ease, padding 280ms ease, margin 280ms ease;
+            }
+            .filtros-toggle-input:checked ~ .filtros {
+                max-height: 600px;
+                opacity: 1;
+                margin: 10px 0 28px;
+                padding: 18px;
+                border-width: 1px;
+            }
         }
         .filtros input, .filtros select {
             padding: 12px 14px;
@@ -353,6 +385,9 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
             <p>Descobre a nossa seleção de veículos e encontra o carro certo para ti.</p>
         </section>
 
+        <div class="filtros-wrap">
+        <input type="checkbox" id="filtros-toggle" class="filtros-toggle-input">
+        <label for="filtros-toggle" class="filtros-toggle-label">Filtros ▾</label>
         <form class="filtros" method="GET" action="<?= htmlspecialchars($basePath . '/') ?>">
             <select name="marca_id">
                 <option value="">Todas as marcas</option>
@@ -374,6 +409,7 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
             <button type="submit">Filtrar</button>
             <a href="<?= htmlspecialchars($basePath . '/') ?>">Limpar</a>
         </form>
+        </div>
 
         <p class="meta"><?= count($veiculos) ?> veículo(s) encontrado(s)</p>
 

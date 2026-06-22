@@ -90,6 +90,14 @@ $reservas = $reservas ?? [];
         .btn-primary {
             background: linear-gradient(135deg, var(--accent), #7a0c0c);
             color: #fff;
+            animation: neonBtnPulse 2.2s ease-in-out infinite;
+        }
+        @keyframes neonBtnPulse {
+            0%, 100% { box-shadow: 0 0 6px rgba(229, 57, 53, 0.5); }
+            50% { box-shadow: 0 0 18px rgba(255, 40, 40, 0.95), 0 0 32px rgba(229, 57, 53, 0.55); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .btn-primary { animation: none; }
         }
         .btn-secondary {
             background: rgba(255, 255, 255, 0.08);

@@ -77,8 +77,19 @@ if (function_exists('csrf_token')) {
             text-align: center;
             font-weight: 700;
         }
-        .btn-confirmar { background: linear-gradient(135deg, var(--accent), #6f0000); color: #fff; }
+        .btn-confirmar {
+            background: linear-gradient(135deg, var(--accent), #6f0000);
+            color: #fff;
+            animation: neonBtnPulse 2.2s ease-in-out infinite;
+        }
         .btn-voltar { background: rgba(255, 255, 255, 0.08); color: var(--text); }
+        @keyframes neonBtnPulse {
+            0%, 100% { box-shadow: 0 0 6px rgba(229, 57, 53, 0.5); }
+            50% { box-shadow: 0 0 18px rgba(255, 40, 40, 0.95), 0 0 32px rgba(229, 57, 53, 0.55); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .btn-confirmar { animation: none; }
+        }
         .vazio {
             border: 1px dashed var(--border);
             border-radius: 18px;

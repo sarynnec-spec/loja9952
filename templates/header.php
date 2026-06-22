@@ -136,10 +136,18 @@ $total_carrinho = count($_SESSION['carrinho'] ?? []);
         background: linear-gradient(135deg, var(--accent), #6f0c10 72%, #4c0508);
         box-shadow: 0 12px 28px rgba(216, 31, 38, 0.24);
         border-color: rgba(255, 255, 255, 0.06);
+        animation: neonBtnPulse 2.2s ease-in-out infinite;
     }
     .nav .nav-accent:hover {
         border-color: rgba(200, 167, 106, 0.32);
         box-shadow: 0 12px 28px rgba(216, 31, 38, 0.3);
+    }
+    @keyframes neonBtnPulse {
+        0%, 100% { box-shadow: 0 12px 28px rgba(216, 31, 38, 0.24), 0 0 6px rgba(229, 57, 53, 0.5); }
+        50% { box-shadow: 0 12px 28px rgba(216, 31, 38, 0.24), 0 0 18px rgba(255, 40, 40, 0.95), 0 0 32px rgba(229, 57, 53, 0.55); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .nav .nav-accent { animation: none; }
     }
     .site-shell {
         max-width: 1180px;

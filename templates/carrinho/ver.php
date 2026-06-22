@@ -23,58 +23,72 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
     <meta charset="UTF-8">
     <title><?= htmlspecialchars($titulo ?? 'Lista de compras') ?></title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 980px; margin: 0 auto; padding: 20px; }
-        h1 { margin-bottom: 8px; }
-        .resumo { color: #455a64; margin-bottom: 18px; }
+        .site-shell.site-main { padding-top: 28px; }
+        h1 { margin: 0 0 8px; font-size: clamp(1.8rem, 3.4vw, 2.6rem); }
+        .resumo { color: var(--muted); margin-bottom: 18px; }
         .lista { display: grid; gap: 14px; }
         .item {
             display: grid;
             grid-template-columns: 160px 1fr auto;
             gap: 14px;
             align-items: center;
-            border: 1px solid #d7dee4;
-            border-radius: 8px;
-            padding: 12px;
-            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 14px;
+            background: var(--surface);
+            box-shadow: var(--shadow);
         }
         .item img {
             width: 160px;
             height: 90px;
             object-fit: cover;
-            border-radius: 6px;
-            background: #eceff1;
+            border-radius: 10px;
+            background: #111;
         }
-        .dados h2 { margin: 0 0 6px; font-size: 1.05rem; color: #1a237e; }
-        .dados .preco { margin: 0; font-weight: bold; color: #1565c0; font-size: 1.05rem; }
+        .dados h2 { margin: 0 0 6px; font-size: 1.05rem; color: var(--text); }
+        .dados .preco { margin: 0; font-weight: bold; color: #fff; font-size: 1.05rem; }
         .acoes { display: flex; flex-direction: column; gap: 8px; }
         .btn {
             border: none;
-            border-radius: 6px;
-            padding: 9px 12px;
+            border-radius: 999px;
+            padding: 10px 14px;
             cursor: pointer;
             font-size: 0.92rem;
             text-decoration: none;
             text-align: center;
             display: inline-block;
+            font-weight: 700;
         }
-        .btn-remover { background: #c62828; color: #fff; }
-        .btn-checkout { background: #1565c0; color: #fff; margin-top: 20px; }
-        .btn-voltar { background: #eceff1; color: #263238; margin-top: 20px; margin-left: 8px; }
+        .btn-remover { background: linear-gradient(135deg, var(--accent), #6f0000); color: #fff; }
+        .btn-checkout {
+            background: linear-gradient(135deg, var(--accent), #6f0000);
+            color: #fff;
+            margin-top: 20px;
+            animation: neonBtnPulse 2.2s ease-in-out infinite;
+        }
+        .btn-voltar { background: rgba(255, 255, 255, 0.08); color: var(--text); margin-top: 20px; margin-left: 8px; }
+        @keyframes neonBtnPulse {
+            0%, 100% { box-shadow: 0 0 6px rgba(229, 57, 53, 0.5); }
+            50% { box-shadow: 0 0 18px rgba(255, 40, 40, 0.95), 0 0 32px rgba(229, 57, 53, 0.55); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .btn-checkout { animation: none; }
+        }
         .vazio {
-            border: 1px dashed #b0bec5;
-            border-radius: 8px;
-            padding: 20px;
-            color: #546e7a;
-            background: #fafcfd;
+            border: 1px dashed var(--border);
+            border-radius: 16px;
+            padding: 22px;
+            color: var(--muted);
+            background: rgba(255, 255, 255, 0.04);
         }
         .msg {
             margin: 0 0 14px;
-            padding: 10px 12px;
-            border-radius: 6px;
+            padding: 12px 14px;
+            border-radius: 12px;
             font-size: 0.95rem;
         }
-        .msg-ok { background: #e8f5e9; color: #1b5e20; border: 1px solid #c8e6c9; }
-        .msg-info { background: #e3f2fd; color: #0d47a1; border: 1px solid #bbdefb; }
+        .msg-ok { background: rgba(46, 125, 50, 0.14); color: #d4ffd7; border: 1px solid rgba(46, 125, 50, 0.35); }
+        .msg-info { background: rgba(13, 71, 161, 0.14); color: #cfe6ff; border: 1px solid rgba(13, 71, 161, 0.35); }
         @media (max-width: 760px) {
             .item {
                 grid-template-columns: 1fr;
@@ -91,6 +105,7 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
 </head>
 <body>
     <?php require __DIR__ . '/../header.php'; ?>
+    <div class="site-shell site-main">
     <h1>Lista de compras</h1>
     <p class="resumo">Total de veículos na lista: <strong><?= $totalVeiculos ?></strong></p>
 
@@ -139,8 +154,9 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
         </div>
 
         <a class="btn btn-checkout" href="<?= htmlspecialchars($basePath . '/checkout') ?>">Prosseguir para checkout</a>
-        <a class="btn btn-voltar" href="<?= htmlspecialchars($basePath . '/') ?>">Continuar a ver ve�culos</a>
+        <a class="btn btn-voltar" href="<?= htmlspecialchars($basePath . '/') ?>">Continuar a ver veículos</a>
     <?php endif; ?>
+    </div>
 </body>
 </html>
 
