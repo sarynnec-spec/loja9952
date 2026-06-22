@@ -51,6 +51,11 @@ if ($recurso === 'checkout' && ($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' 
 }
 
 if ($recurso === 'admin') {
+    if ($acao === 'login') {
+        $authCtrl->adminLogin();
+        exit;
+    }
+
     if ($acao === '') {
         $adminCtrl->dashboard();
         exit;
@@ -96,12 +101,11 @@ match ($routeKey) {
     'registar/' => $authCtrl->registar(),
     'logout/' => $authCtrl->logout(),
     'conta/' => $contaCtrl->ver(),
+    'admin/' => (new AdminController())->dashboard(),
+    'admin/login' => (new AuthController())->adminLogin(),
+    'admin/veiculos' => (new AdminController())->veiculosLista(),
+    'admin/veiculos/criar' => (new AdminController())->veiculoCriar(),
+    'admin/reservas' => (new AdminController())->reservasLista(),
+    'admin/reservas/estado' => (new AdminController())->reservaEstado(),
     default => $ctrl->catalogo(),
-        'admin/'              => (new AdminController())->dashboard(),
-    'admin/login'         => (new AuthController())->adminLogin(),
-    'admin/veiculos'      => (new AdminController())->veiculosLista(),
-    'admin/veiculos/criar'=> (new AdminController())->veiculoCriar(),
-    'admin/reservas'      => (new AdminController())->reservasLista(),
-    'admin/reservas/estado'=> (new AdminController())->reservaEstado(),
-
 };

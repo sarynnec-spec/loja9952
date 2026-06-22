@@ -7,7 +7,7 @@ use App\Model\ClienteModel;
 
 class AuthController
 {
-    private ClienteModel $model;
+    private ?ClienteModel $model = null;
     private string $basePath;
 
     public function __construct(string $basePath = '')
@@ -15,8 +15,16 @@ class AuthController
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-        $this->model = new ClienteModel();
         $this->basePath = $basePath;
+    }
+
+    private function model(): ClienteModel
+    {
+        if (!$this->model instanceof ClienteModel) {
+            $this->model = new ClienteModel();
+        }
+
+        return $this->model;
     }
 
     public function registar(): void
@@ -44,12 +52,12 @@ class AuthController
             if ($pass !== $pass2) {
                 $erros[] = 'As passwords não coincidem.';
             }
-            if ($this->model->emailExiste($email)) {
+            if ($this->model()->emailExiste($email)) {
                 $erros[] = 'Este email já está registado.';
             }
 
             if (empty($erros)) {
-                $this->model->criar([
+                $this->model()->criar([
                     ':nome' => $nome,
                     ':email' => $email,
                     ':telefone' => $tel ?: null,
@@ -75,7 +83,7 @@ class AuthController
 
             $email = trim($_POST['email'] ?? '');
             $pass = $_POST['password'] ?? '';
-            $cliente = $this->model->getByEmail($email);
+            $cliente = $this->model()->getByEmail($email);
 
             if ($cliente && password_verify($pass, $cliente['password'])) {
                 session_regenerate_id(true);
@@ -119,12 +127,13 @@ public function adminLogin(): void {
                 $_SESSION['admin_logado'] = true;
                 $_SESSION['admin_id']     = $admin['id'];
                 $_SESSION['admin_nome']   = $admin['nome'];
-                header('Location: /admin');
+                header('Location: ' . $this->basePath . '/admin');
                 exit;
             }
             $erro = 'Credenciais inválidas.';
         }
         $titulo = 'Administração — Login';
+        $basePath = $this->basePath;
         require '../templates/admin/login.php';
     }
     
@@ -132,7 +141,12 @@ public function adminLogin(): void {
     public static function verificarAdmin(): void {
         if (session_status() === PHP_SESSION_NONE) session_start();
         if (!($_SESSION['admin_logado'] ?? false)) {
-            header('Location: /admin/login');
+            $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+            $basePath = rtrim($scriptDir, '/');
+            if ($basePath === '/') {
+                $basePath = '';
+            }
+            header('Location: ' . $basePath . '/admin/login');
             exit;
         }
     }

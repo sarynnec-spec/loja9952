@@ -7,19 +7,27 @@ use App\Model\VeiculoModel;
 
 class CarrinhoController
 {
-    private VeiculoModel $model;
+    private ?VeiculoModel $model = null;
     private string $basePath;
 
     public function __construct(string $basePath = '')
     {
-        $this->model = new VeiculoModel();
         $this->basePath = $basePath;
+    }
+
+    private function model(): VeiculoModel
+    {
+        if (!$this->model instanceof VeiculoModel) {
+            $this->model = new VeiculoModel();
+        }
+
+        return $this->model;
     }
 
     public function ver(): void
     {
         $ids = $_SESSION['carrinho'] ?? [];
-        $veiculos = array_map(fn ($id) => $this->model->getById((int) $id), $ids);
+        $veiculos = array_map(fn ($id) => $this->model()->getById((int) $id), $ids);
         $veiculos = array_filter($veiculos);
         $titulo = 'A minha lista de reservas';
         $basePath = $this->basePath;

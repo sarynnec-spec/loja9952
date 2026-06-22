@@ -129,10 +129,18 @@ $imagem = function_exists('veiculo_imagem_profissional') ? veiculo_imagem_profis
             font-weight: 700;
             box-shadow: 0 16px 32px rgba(229, 57, 53, 0.22);
             transition: transform 220ms ease, box-shadow 220ms ease;
+            animation: ctaNeon 2.2s ease-in-out infinite;
         }
         .cta:hover {
             transform: translateY(-2px);
             box-shadow: 0 20px 44px rgba(229, 57, 53, 0.28);
+        }
+        @keyframes ctaNeon {
+            0%, 100% { box-shadow: 0 16px 32px rgba(229, 57, 53, 0.22), 0 0 8px rgba(229, 57, 53, 0.5); }
+            50% { box-shadow: 0 16px 32px rgba(229, 57, 53, 0.22), 0 0 22px rgba(255, 40, 40, 0.95), 0 0 38px rgba(229, 57, 53, 0.55); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .cta { animation: none; }
         }
         @media (max-width: 900px) {
             .page-grid { grid-template-columns: 1fr; }
@@ -176,7 +184,7 @@ $imagem = function_exists('veiculo_imagem_profissional') ? veiculo_imagem_profis
                 <form method="POST" action="<?= htmlspecialchars($basePath . '/carrinho/adicionar') ?>">
                     <input type="hidden" name="veiculo_id" value="<?= $veiculo['id'] ?>">
                     <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
-                    <button type="submit" class="cta">🛒 Adicionar à lista de reservas</button>
+                    <button type="submit" class="cta">Reservar veículo</button>
                 </form>
             </div>
         </div>

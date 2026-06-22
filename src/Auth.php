@@ -12,7 +12,12 @@ class Auth
         }
 
         if (!($_SESSION['logado'] ?? false)) {
-            header('Location: /login');
+            $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+            $basePath = rtrim($scriptDir, '/');
+            if ($basePath === '/') {
+                $basePath = '';
+            }
+            header('Location: ' . $basePath . '/login');
             exit;
         }
     }

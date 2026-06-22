@@ -129,7 +129,7 @@ if (function_exists('csrf_token')) {
                     </div>
 
                     <div class="acoes">
-                        <button type="submit" class="btn btn-confirmar">Confirmar reserva</button>
+                        <button type="submit" class="btn btn-confirmar">Reservar veículo</button>
                         <a class="btn btn-voltar" href="<?= htmlspecialchars($basePath . '/carrinho') ?>">Voltar ao carrinho</a>
                     </div>
                 </form>

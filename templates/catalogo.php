@@ -10,20 +10,156 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
     <title><?= htmlspecialchars($titulo) ?></title>
     <style>
         .hero {
-            margin: 28px 0 22px;
-            padding: 34px;
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            background:
-                linear-gradient(135deg, rgba(229, 57, 53, 0.24), rgba(255, 255, 255, 0.05)),
-                rgba(255, 255, 255, 0.05);
-            box-shadow:
-                0 0 0 1px rgba(229, 57, 53, 0.25),
-                0 0 24px rgba(229, 57, 53, 0.18),
-                0 28px 80px rgba(0, 0, 0, 0.55);
-            overflow: hidden;
+            display: none;
+        }
+        .intro-screen {
             position: relative;
-            transform-style: preserve-3d;
+            min-height: 100vh;
+            display: grid;
+            align-items: end;
+            width: 100vw;
+            margin-left: calc(50% - 50vw);
+            margin-right: calc(50% - 50vw);
+            margin-bottom: 28px;
+            padding: 0;
+            overflow: hidden;
+            border-radius: 0;
+            z-index: 0;
+        }
+        .intro-media {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            min-height: 100%;
+            border-radius: 0;
+            overflow: hidden;
+            border: none;
+            box-shadow: none;
+            background: #050505;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .intro-media video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: contrast(1.1) saturate(1.05) brightness(0.75);
+        }
+        .intro-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 0.55) 78%, rgba(0, 0, 0, 0.86) 100%);
+            pointer-events: none;
+        }
+        .intro-content {
+            position: relative;
+            z-index: 1;
+            max-width: 560px;
+            padding: clamp(20px, 4vw, 48px);
+            padding-bottom: clamp(28px, 5vw, 52px);
+            display: flex;
+            flex-direction: column;
+            text-shadow: 0 2px 24px rgba(0, 0, 0, 0.82);
+        }
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            margin-bottom: 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.06);
+            color: #f5d6d5;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            font-size: 0.74rem;
+        }
+        .eyebrow::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: var(--accent);
+            box-shadow: 0 0 18px rgba(229, 57, 53, 0.8);
+        }
+        .intro-content h1 {
+            margin: 0 0 10px;
+            font-size: clamp(2rem, 4.2vw, 3.4rem);
+            line-height: 0.98;
+            letter-spacing: -0.04em;
+            text-transform: uppercase;
+            color: #fff;
+            animation: neonPulse 2.4s ease-in-out infinite;
+        }
+        @keyframes neonPulse {
+            0%, 100% {
+                text-shadow:
+                    0 0 6px rgba(255, 60, 60, 0.9),
+                    0 0 16px rgba(255, 30, 30, 0.8),
+                    0 0 32px rgba(229, 57, 53, 0.7),
+                    0 0 60px rgba(229, 57, 53, 0.5),
+                    0 14px 50px rgba(0, 0, 0, 0.5);
+            }
+            50% {
+                text-shadow:
+                    0 0 10px rgba(255, 90, 90, 1),
+                    0 0 26px rgba(255, 40, 40, 0.95),
+                    0 0 48px rgba(229, 57, 53, 0.85),
+                    0 0 90px rgba(229, 57, 53, 0.65),
+                    0 14px 50px rgba(0, 0, 0, 0.5);
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .intro-content h1 { animation: none; }
+        }
+        .intro-content p {
+            margin: 0 0 20px;
+            color: rgba(247, 244, 239, 0.86);
+            max-width: 52ch;
+            font-size: 0.98rem;
+            line-height: 1.55;
+        }
+        .intro-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .intro-actions a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 18px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 700;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+        }
+        .intro-actions .primary {
+            background: linear-gradient(135deg, var(--accent), #6f0000);
+            color: #fff;
+            box-shadow: 0 14px 36px rgba(229, 57, 53, 0.28);
+        }
+        .intro-actions .secondary {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text);
+        }
+        .intro-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 22px;
+        }
+        .intro-badge {
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(247, 244, 239, 0.82);
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
         }
         .hero::after {
             content: "";
@@ -122,8 +258,12 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
         .card-body { padding: 16px; }
         .card-body h3 { margin: 0 0 6px; font-size: 1.1rem; }
         .card-body p { color: var(--muted); margin: 0 0 12px; }
-        .preco { font-size: 1.35rem; font-weight: 800; color: #fff; text-shadow: 0 0 14px rgba(229, 57, 53, 0.3); }
+        .preco { font-size: 1.35rem; font-weight: 800; color: #fff; animation: precoGlow 2.6s ease-in-out infinite; }
         .preco span { color: var(--accent); }
+        @keyframes precoGlow {
+            0%, 100% { text-shadow: 0 0 8px rgba(229, 57, 53, 0.35); }
+            50% { text-shadow: 0 0 18px rgba(255, 50, 50, 0.75), 0 0 34px rgba(229, 57, 53, 0.4); }
+        }
         .detalhe, .btn-carrinho {
             display: inline-flex;
             align-items: center;
@@ -141,7 +281,18 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
             color: var(--text);
             box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
         }
-        .btn-carrinho { background: linear-gradient(135deg, var(--accent), #6f0000); color: #fff; }
+        .btn-carrinho {
+            background: linear-gradient(135deg, var(--accent), #6f0000);
+            color: #fff;
+            animation: btnNeon 2.2s ease-in-out infinite;
+        }
+        @keyframes btnNeon {
+            0%, 100% { box-shadow: 0 0 6px rgba(229, 57, 53, 0.5), 0 4px 14px rgba(0, 0, 0, 0.3); }
+            50% { box-shadow: 0 0 18px rgba(255, 40, 40, 0.95), 0 0 34px rgba(229, 57, 53, 0.55), 0 4px 14px rgba(0, 0, 0, 0.3); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .preco, .btn-carrinho { animation: none; }
+        }
         .acoes-card { display: flex; gap: 10px; flex-wrap: wrap; }
         .empty {
             padding: 22px;
@@ -157,14 +308,49 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation: none !important; transition: none !important; }
         }
+        @media (max-width: 760px) {
+            .intro-content {
+                padding: 20px;
+                padding-bottom: 28px;
+            }
+            .intro-content h1 {
+                font-size: clamp(1.8rem, 10vw, 2.8rem);
+            }
+        }
+        .site-shell.site-main {
+            position: relative;
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
     <?php require __DIR__ . '/header.php'; ?>
     <div class="site-shell site-main">
-        <section class="hero">
+        <section class="intro-screen" aria-label="Apresentação inicial">
+            <div class="intro-media">
+                <video autoplay muted loop playsinline preload="auto">
+                    <source src="<?= htmlspecialchars($basePath . '/uploads/luxury_car_intro.mp4') ?>" type="video/mp4">
+                </video>
+                <div class="intro-overlay"></div>
+                <div class="intro-content">
+                    <div class="eyebrow">Luxury Car Dealership</div>
+                    <h1>AutoShop</h1>
+                    <p>Viaturas premium selecionadas e inspecionadas, prontas para entrega imediata. Visita o nosso stand ou reserva o teu próximo carro em poucos cliques.</p>
+                    <div class="intro-actions">
+                        <a class="primary" href="#catalogo">Explorar catálogo</a>
+                        <a class="secondary" href="<?= htmlspecialchars($basePath . '/carrinho') ?>">Ver lista</a>
+                    </div>
+                    <div class="intro-badges">
+                        <span class="intro-badge">Viaturas inspecionadas</span>
+                        <span class="intro-badge">Stand físico e online</span>
+                        <span class="intro-badge">Reserva sem compromisso</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="hero" id="catalogo">
             <h1>AutoShop</h1>
-            <p>Descobre veículos selecionados com uma apresentação mais cinematográfica, sem alterar o teu fluxo de compra, reserva e conta.</p>
+            <p>Descobre a nossa seleção de veículos e encontra o carro certo para ti.</p>
         </section>
 
         <form class="filtros" method="GET" action="<?= htmlspecialchars($basePath . '/') ?>">
@@ -212,7 +398,7 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
                         <form method="POST" action="<?= htmlspecialchars($basePath . '/carrinho/adicionar') ?>" style="margin:0;">
                             <input type="hidden" name="veiculo_id" value="<?= (int) $v['id'] ?>">
                             <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
-                            <button type="submit" class="btn-carrinho">Adicionar ao carrinho</button>
+                            <button type="submit" class="btn-carrinho">Reservar veículo</button>
                         </form>
                     </div>
                 </div>

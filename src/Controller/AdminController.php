@@ -6,10 +6,20 @@ use App\Model\ReservaModel;
 
 class AdminController {
 
+    private function basePath(): string {
+        $scriptDir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
+        $basePath = rtrim($scriptDir, '/');
+        return $basePath === '/' ? '' : $basePath;
+    }
+
+    private function url(string $path): string {
+        return $this->basePath() . $path;
+    }
+
     private function auth(): void {
         if (session_status() === PHP_SESSION_NONE) session_start();
         if (!($_SESSION['admin_logado'] ?? false)) {
-            header('Location: /admin/login'); exit;
+            header('Location: ' . $this->url('/admin/login')); exit;
         }
     }
 
@@ -50,7 +60,7 @@ class AdminController {
             if (empty($erros)) {
                 $model->criar($dados);
                 $_SESSION['msg_ok'] = 'Veículo adicionado!';
-                header('Location: /admin/veiculos'); exit;
+                header('Location: ' . $this->url('/admin/veiculos')); exit;
             }
         }
 
@@ -86,7 +96,7 @@ class AdminController {
             if (empty($erros)) {
                 $model->atualizar($id, $dados);
                 $_SESSION['msg_ok'] = 'Veículo atualizado!';
-                header('Location: /admin/veiculos'); exit;
+                header('Location: ' . $this->url('/admin/veiculos')); exit;
             }
 
             $veiculo = array_merge($veiculo, $_POST);
@@ -109,7 +119,7 @@ class AdminController {
         $model = new VeiculoModel();
         $model->apagar($id);
         $_SESSION['msg_ok'] = 'Veículo apagado!';
-        header('Location: /admin/veiculos'); exit;
+        header('Location: ' . $this->url('/admin/veiculos')); exit;
     }
 
     private function validarVeiculo(array $post, array &$erros): array {
@@ -209,6 +219,6 @@ class AdminController {
                 $stmt2->execute([':id'=>$id]);
             }
         }
-        header('Location: /admin/reservas'); exit;
+        header('Location: ' . $this->url('/admin/reservas')); exit;
     }
 }

@@ -8,20 +8,22 @@ $total_carrinho = count($_SESSION['carrinho'] ?? []);
 <style>
     :root {
         color-scheme: dark;
-        --bg: #0b0b0d;
-        --surface: rgba(255, 255, 255, 0.06);
+        --bg: #09090b;
+        --surface: rgba(255, 255, 255, 0.05);
         --surface-strong: rgba(255, 255, 255, 0.1);
         --border: rgba(255, 255, 255, 0.12);
-        --text: #f5f5f5;
+        --text: #f7f4ef;
         --muted: #b9bcc4;
-        --accent: #e53935;
-        --accent-2: #ff6f61;
-        --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+        --accent: #d81f26;
+        --accent-2: #ff6b61;
+        --gold: #c8a76a;
+        --shadow: 0 22px 60px rgba(0, 0, 0, 0.42);
     }
     html {
         background:
-            radial-gradient(circle at top, rgba(229, 57, 53, 0.2), transparent 34%),
-            radial-gradient(circle at 85% 12%, rgba(255, 255, 255, 0.08), transparent 20%),
+            radial-gradient(circle at top, rgba(216, 31, 38, 0.16), transparent 30%),
+            radial-gradient(circle at 85% 12%, rgba(200, 167, 106, 0.12), transparent 18%),
+            radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.06), transparent 16%),
             linear-gradient(180deg, #121214 0%, #09090b 100%);
         min-height: 100%;
         scroll-behavior: smooth;
@@ -52,8 +54,10 @@ $total_carrinho = count($_SESSION['carrinho'] ?? []);
         position: sticky;
         top: 0;
         z-index: 10;
-        backdrop-filter: blur(16px);
-        background: rgba(8, 8, 10, 0.8);
+        backdrop-filter: blur(18px);
+        background:
+            linear-gradient(180deg, rgba(12, 12, 14, 0.92), rgba(8, 8, 10, 0.76)),
+            radial-gradient(circle at 50% 0%, rgba(200, 167, 106, 0.08), transparent 38%);
         border-bottom: 1px solid var(--border);
         box-shadow: var(--shadow);
         animation: headerDrop 420ms ease both;
@@ -61,63 +65,81 @@ $total_carrinho = count($_SESSION['carrinho'] ?? []);
     .site-header__inner {
         max-width: 1180px;
         margin: 0 auto;
-        padding: 16px 20px;
+        padding: 14px 20px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 18px;
+        gap: 20px;
     }
     .brand {
         display: inline-flex;
         align-items: center;
-        gap: 12px;
+        gap: 14px;
         text-decoration: none;
         font-weight: 700;
-        letter-spacing: 0.04em;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
-    }
-    .brand-mark {
-        width: 38px;
-        height: 38px;
-        border-radius: 12px;
-        background: linear-gradient(135deg, var(--accent), #6f0000);
-        box-shadow: 0 10px 30px rgba(229, 57, 53, 0.35);
         position: relative;
-        overflow: hidden;
+        padding: 8px 12px 8px 10px;
+        border-radius: 18px;
+        background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+        border: 1px solid rgba(255,255,255,0.08);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
     }
-    .brand-mark::after {
+    .brand-name {
+        font-size: clamp(1.1rem, 2vw, 1.5rem);
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        color: #ffffff;
+    }
+    .brand-text {
+        font-size: 0.74rem;
+        letter-spacing: 0.28em;
+        color: rgba(247, 244, 239, 0.78);
+        white-space: nowrap;
+        position: relative;
+        padding-left: 10px;
+    }
+    .brand-text::before {
         content: "";
         position: absolute;
-        inset: 0;
-        background: linear-gradient(120deg, transparent 10%, rgba(255,255,255,0.32) 50%, transparent 90%);
-        transform: translateX(-140%);
-        animation: sheen 4.8s ease-in-out infinite;
+        left: 0;
+        top: 50%;
+        width: 1px;
+        height: 1.4em;
+        background: linear-gradient(180deg, transparent, rgba(200, 167, 106, 0.8), transparent);
+        transform: translateY(-50%);
     }
-    .brand span { font-size: 1rem; }
     .nav {
         display: flex;
-        gap: 12px;
+        gap: 10px;
         align-items: center;
         flex-wrap: wrap;
         justify-content: flex-end;
     }
     .nav a {
         text-decoration: none;
-        padding: 10px 14px;
+        padding: 11px 15px;
         border-radius: 999px;
         color: var(--text);
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid transparent;
-        transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.03));
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
     }
     .nav a:hover {
         transform: translateY(-1px);
-        background: rgba(255, 255, 255, 0.08);
-        border-color: rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.09);
+        border-color: rgba(200, 167, 106, 0.28);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
     }
     .nav .nav-accent {
-        background: linear-gradient(135deg, var(--accent), #7a0c0c);
-        box-shadow: 0 12px 28px rgba(229, 57, 53, 0.22);
+        background: linear-gradient(135deg, var(--accent), #6f0c10 72%, #4c0508);
+        box-shadow: 0 12px 28px rgba(216, 31, 38, 0.24);
+        border-color: rgba(255, 255, 255, 0.06);
+    }
+    .nav .nav-accent:hover {
+        border-color: rgba(200, 167, 106, 0.32);
+        box-shadow: 0 12px 28px rgba(216, 31, 38, 0.3);
     }
     .site-shell {
         max-width: 1180px;
@@ -139,10 +161,6 @@ $total_carrinho = count($_SESSION['carrinho'] ?? []);
         from { transform: translate3d(0, 0, 0) scale(1); }
         to { transform: translate3d(0, -8px, 0) scale(1.02); }
     }
-    @keyframes sheen {
-        0%, 55% { transform: translateX(-140%); }
-        80%, 100% { transform: translateX(140%); }
-    }
     @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after {
             animation: none !important;
@@ -151,15 +169,27 @@ $total_carrinho = count($_SESSION['carrinho'] ?? []);
         }
     }
     @media (max-width: 760px) {
-        .site-header__inner { flex-direction: column; align-items: flex-start; }
+        .site-header__inner { flex-direction: column; align-items: center; }
+        .brand {
+            justify-content: center;
+            gap: 8px;
+            flex-direction: column;
+            padding: 10px 12px 12px;
+            text-align: center;
+        }
         .nav { justify-content: flex-start; }
+        .brand-text {
+            font-size: 0.68rem;
+            padding-left: 0;
+        }
+        .brand-text::before { display: none; }
     }
 </style>
 <header class="site-header">
     <div class="site-header__inner">
         <a href="<?= htmlspecialchars($basePath . '/') ?>" class="brand">
-            <span class="brand-mark" aria-hidden="true"></span>
-            <span>AutoShop</span>
+            <span class="brand-name">AutoShop</span>
+            <span class="brand-text">Carefully Driven</span>
         </a>
         <nav class="nav">
             <a href="<?= htmlspecialchars($basePath . '/') ?>">Catálogo</a>
