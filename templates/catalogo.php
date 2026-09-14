@@ -38,6 +38,13 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
             background: #050505;
             z-index: -1;
             pointer-events: none;
+            /*
+             * O texto vive dentro desta caixa, por isso é aqui que se alinha:
+             * o carro ocupa a direita do vídeo e sobra a faixa da esquerda.
+             */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
         }
         .intro-media video {
             position: absolute;
@@ -50,32 +57,128 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
         .intro-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 0.55) 78%, rgba(0, 0, 0, 0.86) 100%);
+            /*
+             * Escurece a esquerda, onde está o texto, e deixa o carro limpo
+             * à direita. A faixa de cima leva o seu próprio escurecimento.
+             */
+            background:
+                linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.58) 34%, rgba(0, 0, 0, 0) 64%),
+                linear-gradient(180deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 18%, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.7) 100%);
             pointer-events: none;
         }
         .intro-content {
             position: relative;
             z-index: 1;
-            max-width: 560px;
-            padding: clamp(20px, 4vw, 48px);
+            /*
+             * O pai tem pointer-events:none para o vídeo não apanhar cliques.
+             * Sem isto os botões do hero herdam o mesmo e ficam mortos — o
+             * clique atravessava-os e ia parar à secção.
+             */
+            pointer-events: auto;
+            /*
+             * Bloco no canto esquerdo: o carro ocupa a direita do plano e o
+             * texto centrado passava-lhe por cima. A largura é o travão do
+             * título — mais do que isto e "AUTOSHOP" invade o capô.
+             */
+            max-width: 640px;
+            padding: clamp(20px, 4vw, 56px);
             padding-bottom: clamp(28px, 5vw, 52px);
             display: flex;
             flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
             text-shadow: 0 2px 24px rgba(0, 0, 0, 0.82);
         }
+        /*
+         * Entrada escalonada: cada bloco do texto sobe e revela-se por sua vez,
+         * a acompanhar os 8s do vídeo. O reset de prefers-reduced-motion mais
+         * abaixo desliga isto por inteiro, por isso o estado final tem de ser
+         * o normal — daí o `forwards` e não um opacity:0 fixo no elemento.
+         */
+        @keyframes introRise {
+            from {
+                opacity: 0;
+                transform: translateY(26px);
+                filter: blur(6px);
+            }
+            to {
+                opacity: 1;
+                transform: none;
+                filter: blur(0);
+            }
+        }
+        /* A faixa desce do cabeçalho, antes de tudo o resto. */
+        @keyframes barraDesce {
+            from { opacity: 0; transform: translateY(-100%); }
+            to   { opacity: 1; transform: none; }
+        }
         .eyebrow {
-            display: inline-flex;
+            animation: barraDesce 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+        }
+        /*
+         * O título surge de dentro: abre da escala, desfocado, e assenta.
+         * É a peça central do ecrã, por isso a entrada é mais marcada que a
+         * do resto do texto.
+         */
+        @keyframes tituloSurge {
+            from {
+                opacity: 0;
+                transform: scale(0.82) translateY(18px);
+                filter: blur(18px);
+                letter-spacing: 0.08em;
+            }
+            to {
+                opacity: 1;
+                transform: none;
+                filter: blur(0);
+                letter-spacing: -0.045em;
+            }
+        }
+        .intro-content > * {
+            animation: introRise 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+        .intro-content > p             { animation-delay: 0.95s; }
+        .intro-content > .intro-actions { animation-delay: 1.15s; }
+        .intro-content > .intro-badges  { animation-delay: 1.35s; }
+        /*
+         * O h1 tem já o neonPulse infinito. Como só se pode ter uma lista de
+         * animações, corre as duas: a entrada uma vez, o pulsar em ciclo.
+         */
+        .intro-content > h1 {
+            animation:
+                tituloSurge 1.25s cubic-bezier(0.22, 1, 0.36, 1) 0.45s both,
+                neonPulse 2.4s ease-in-out 1.9s infinite;
+        }
+        /*
+         * Faixa encostada ao cabeçalho, de ponta a ponta. Fica dentro do
+         * .intro-media (que é inset:0) para se medir pela largura toda do
+         * ecrã, e não pela coluna estreita do texto.
+         */
+        .eyebrow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 2;
+            display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
-            margin-bottom: 16px;
-            border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            background: rgba(255, 255, 255, 0.06);
+            justify-content: center;
+            gap: 12px;
+            padding: 13px 20px;
+            border-radius: 0;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+            background: linear-gradient(90deg,
+                rgba(12, 12, 14, 0.34) 0%,
+                rgba(109, 8, 12, 0.52) 50%,
+                rgba(12, 12, 14, 0.34) 100%);
+            backdrop-filter: blur(10px);
             color: #f5d6d5;
-            letter-spacing: 0.18em;
+            letter-spacing: 0.34em;
             text-transform: uppercase;
-            font-size: 0.74rem;
+            font-size: 0.76rem;
+            font-weight: 700;
+            text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8);
         }
         .eyebrow::before {
             content: "";
@@ -86,13 +189,14 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
             box-shadow: 0 0 18px rgba(229, 57, 53, 0.8);
         }
         .intro-content h1 {
-            margin: 0 0 10px;
-            font-size: clamp(2rem, 4.2vw, 3.4rem);
-            line-height: 0.98;
-            letter-spacing: -0.04em;
+            margin: 0 0 16px;
+            /* Grande, mas contido na metade esquerda para não tapar o carro. */
+            font-size: clamp(2.8rem, 7vw, 5.6rem);
+            line-height: 0.92;
+            letter-spacing: -0.045em;
             text-transform: uppercase;
             color: #fff;
-            animation: neonPulse 2.4s ease-in-out infinite;
+            /* A animação vive na regra .intro-content > h1 acima: entrada + pulsar. */
         }
         @keyframes neonPulse {
             0%, 100% {
@@ -116,7 +220,7 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
             .intro-content h1 { animation: none; }
         }
         .intro-content p {
-            margin: 0 0 20px;
+            margin: 0 0 24px;
             color: rgba(247, 244, 239, 0.86);
             max-width: 52ch;
             font-size: 0.98rem;
@@ -126,6 +230,7 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
+            justify-content: flex-start;
         }
         .intro-actions a {
             display: inline-flex;
@@ -151,6 +256,7 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
             flex-wrap: wrap;
             gap: 10px;
             margin-top: 22px;
+            justify-content: flex-start;
         }
         .intro-badge {
             padding: 10px 14px;
@@ -341,12 +447,23 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
             *, *::before, *::after { animation: none !important; transition: none !important; }
         }
         @media (max-width: 760px) {
+            /* Em ecrã estreito a faixa aperta e o título tem de caber na largura. */
+            .eyebrow {
+                padding: 10px 14px;
+                font-size: 0.62rem;
+                letter-spacing: 0.22em;
+            }
+            .intro-overlay {
+                background:
+                    radial-gradient(ellipse 85% 45% at 50% 50%, rgba(0, 0, 0, 0.78) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0) 100%),
+                    linear-gradient(180deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0) 26%, rgba(0, 0, 0, 0) 62%, rgba(0, 0, 0, 0.8) 100%);
+            }
             .intro-content {
                 padding: 20px;
                 padding-bottom: 28px;
             }
             .intro-content h1 {
-                font-size: clamp(1.8rem, 10vw, 2.8rem);
+                font-size: clamp(2.6rem, 16vw, 4.4rem);
             }
         }
         .site-shell.site-main {
@@ -361,11 +478,15 @@ $placeholder = 'data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A//ww
         <section class="intro-screen" aria-label="Apresentação inicial">
             <div class="intro-media">
                 <video autoplay muted loop playsinline preload="auto">
-                    <source src="<?= htmlspecialchars($basePath . '/uploads/luxury_car_intro.mp4') ?>" type="video/mp4">
+                    <source src="<?= htmlspecialchars($basePath . '/uploads/carro.mp4') ?>" type="video/mp4">
                 </video>
                 <div class="intro-overlay"></div>
+                <!--
+                    A faixa vive fora do bloco de texto: só assim pode encostar-se
+                    ao cabeçalho e ocupar a largura toda da página.
+                -->
+                <div class="eyebrow">Luxury Car Dealership</div>
                 <div class="intro-content">
-                    <div class="eyebrow">Luxury Car Dealership</div>
                     <h1>AutoShop</h1>
                     <p>Viaturas premium selecionadas e inspecionadas, prontas para entrega imediata. Visita o nosso stand ou reserva o teu próximo carro em poucos cliques.</p>
                     <div class="intro-actions">
